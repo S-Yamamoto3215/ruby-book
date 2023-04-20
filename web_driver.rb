@@ -22,6 +22,12 @@ element = driver.find_element(:id, 'continue')
 element.click
 
 wait.until { driver.find_element(:id, 'ap_password').displayed? }
+element = driver.find_element(:id, 'ap_password')
+element.send_keys(account[:password])
 
+element = driver.find_element(:id, 'signInSubmit')
+element.click
+sleep 10
+wait.until { driver.find_element(:id, 'nav-link-accountList').displayed? }
 sleep 3
 driver.quit
