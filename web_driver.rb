@@ -27,7 +27,17 @@ element.send_keys(account[:password])
 
 element = driver.find_element(:id, 'signInSubmit')
 element.click
-sleep 10
-wait.until { driver.find_element(:id, 'nav-link-accountList').displayed? }
+
+wait.until { driver.find_element(:id, 'nav-orders').displayed? }
+element = driver.find_element(:id, 'nav-orders')
+element.click
+wait.until { driver.find_element(:id, 'navFooter').displayed? }
+puts driver.title
+
+years = driver.find_element(:id, 'time-filter')
+select = Selenium::WebDriver::Support::Select.new(years)
+select.select_by(:value, 'year-2022')
+wait.until { driver.find_element(:id, 'navFooter').displayed? }
+
 sleep 3
 driver.quit
