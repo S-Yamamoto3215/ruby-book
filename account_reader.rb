@@ -1,4 +1,6 @@
-require "json"
+# frozen_string_literal: true
+
+require 'json'
 
 def read_account(filename)
   File.open(filename) do |file|

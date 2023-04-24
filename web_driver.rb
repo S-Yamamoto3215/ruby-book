@@ -1,11 +1,10 @@
-# fronzen_string_literal: true
+# frozen_string_literal: true
 
 require 'selenium-webdriver'
 require_relative './account_reader'
 
 abort 'Usage: ruby web_driver.rb <account.json>' if ARGV.empty?
 account = read_account(ARGV[0])
-
 
 driver = Selenium::WebDriver.for :chrome
 wait = Selenium::WebDriver::Wait.new(timeout: 20)
