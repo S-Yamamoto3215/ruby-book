@@ -38,5 +38,10 @@ select = Selenium::WebDriver::Support::Select.new(years)
 select.select_by(:value, 'year-2022')
 wait.until { driver.find_element(:id, 'navFooter').displayed? }
 
+selector = '#ordersContainer .order > div:nth-child(2) .a-fixed-left-grid-col.a-col-right > div:nth-child(1)'
+titles = driver.find_elements(:css, selector)
+puts "アイテム数: #{titles.size}"
+titles.map { |t| puts t.text }
+
 sleep 3
 driver.quit
