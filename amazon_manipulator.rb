@@ -17,38 +17,33 @@ class AmazonManipulator
 
   def login
     @driver.get BASE_URL
-    element = @driver.find_element(:id, 'nav-link-accountList')
+    element = wait_and_find_element(:id, 'nav-link-accountList')
     element.click
-    @wait.until { @driver.find_element(:id, 'ap_email').displayed? }
-    element = @driver.find_element(:id, 'ap_email')
+    element = wait_and_find_element(:id, 'ap_email')
     element.send_keys(@account[:email])
-    element = @driver.find_element(:id, 'continue')
+    element = wait_and_find_element(:id, 'continue')
     element.click
-    @wait.until { @driver.find_element(:id, 'ap_password').displayed? }
-    element = @driver.find_element(:id, 'ap_password')
+    element = wait_and_find_element(:id, 'ap_password')
     element.send_keys(@account[:password])
-    element = @driver.find_element(:id, 'signInSubmit')
+    element = wait_and_find_element(:id, 'signInSubmit')
     element.click
-    @wait.until { @driver.find_element(:id, 'nav-link-accountList').displayed? }
+    element = wait_and_find_element(:id, 'nav-link-accountList')
   end
 
   def logout
-    @wait.until { @driver.find_element(:id, 'nav-link-accountList').displayed? }
-    element = @driver.find_element(:id, 'nav-link-accountList')
+    element = wait_and_find_element(:id, 'nav-link-accountList')
     @driver.action.move_to(element).perform
-    @wait.until { @driver.find_element(:id, 'nav-item-signout').displayed? }
-    element = @driver.find_element(:id, 'nav-item-signout')
+    element = wait_and_find_element(:id, 'nav-item-signout')
     element.click
-    @wait.until { @driver.find_element(:id, 'ap_email').displayed? }
+    element = wait_and_find_element(:id, 'ap_email')
   end
 
   def run
     login
     sleep 2
-    @wait.until { @driver.find_element(:id, 'nav-orders').displayed? }
-    element = @driver.find_element(:id, 'nav-orders')
+    element = wait_and_find_element(:id, 'nav-orders')
     element.click
-    @wait.until { @driver.find_element(:id, 'navFooter').displayed? }
+    element = wait_and_find_element(:id, 'navFooter')
     puts @driver.title
     years = @driver.find_element(:id, 'time-filter')
     select = Selenium::WebDriver::Support::Select.new(years)
@@ -62,6 +57,13 @@ class AmazonManipulator
     logout
     sleep 2
     @driver.quit
+  end
+
+  private
+
+  def wait_and_find_element(how, what)
+    @wait.until { @driver.find_element(how, what).displayed? }
+    @driver.find_element(how, what)
   end
 end
 
