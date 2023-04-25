@@ -16,18 +16,11 @@ class AmazonManipulator
   end
 
   def login
-    @driver.get BASE_URL
-    element = wait_and_find_element(:id, 'nav-link-accountList')
-    element.click
-    element = wait_and_find_element(:id, 'ap_email')
-    element.send_keys(@account[:email])
-    element = wait_and_find_element(:id, 'continue')
-    element.click
-    element = wait_and_find_element(:id, 'ap_password')
-    element.send_keys(@account[:password])
-    element = wait_and_find_element(:id, 'signInSubmit')
-    element.click
-    element = wait_and_find_element(:id, 'nav-link-accountList')
+    open_top_page
+    open_login_page
+    enter_email
+    enter_password
+    wait_for_loged_in
   end
 
   def logout
@@ -35,7 +28,7 @@ class AmazonManipulator
     @driver.action.move_to(element).perform
     element = wait_and_find_element(:id, 'nav-item-signout')
     element.click
-    element = wait_and_find_element(:id, 'ap_email')
+    wait_and_find_element(:id, 'ap_email')
   end
 
   def run
@@ -43,7 +36,7 @@ class AmazonManipulator
     sleep 2
     element = wait_and_find_element(:id, 'nav-orders')
     element.click
-    element = wait_and_find_element(:id, 'navFooter')
+    wait_and_find_element(:id, 'navFooter')
     puts @driver.title
     years = @driver.find_element(:id, 'time-filter')
     select = Selenium::WebDriver::Support::Select.new(years)
@@ -64,6 +57,32 @@ class AmazonManipulator
   def wait_and_find_element(how, what)
     @wait.until { @driver.find_element(how, what).displayed? }
     @driver.find_element(how, what)
+  end
+
+  def open_top_page
+    @driver.get BASE_URL
+    wait_and_find_element(:id, 'navFooter')
+  end
+
+  def open_login_page
+    element = wait_and_find_element(:id, 'nav-link-accountList')
+    element.click
+  end
+
+  def enter_email
+    element = wait_and_find_element(:id, 'ap_email')
+    element.send_keys(@account[:email])
+    @driver.find_element(:id, 'continue').click
+  end
+
+  def enter_password
+    element = wait_and_find_element(:id, 'ap_password')
+    element.send_keys(@account[:password])
+    @driver.find_element(:id, 'signInSubmit').click
+  end
+
+  def wait_for_loged_in
+    wait_and_find_element(:id, 'nav-link-accountList')
   end
 end
 
