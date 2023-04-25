@@ -32,9 +32,19 @@ class AmazonManipulator
     @wait.until { @driver.find_element(:id, 'nav-link-accountList').displayed? }
   end
 
+  def logout
+    @wait.until { @driver.find_element(:id, 'nav-link-accountList').displayed? }
+    element = @driver.find_element(:id, 'nav-link-accountList')
+    @driver.action.move_to(element).perform
+    @wait.until { @driver.find_element(:id, 'nav-item-signout').displayed? }
+    element = @driver.find_element(:id, 'nav-item-signout')
+    element.click
+    @wait.until { @driver.find_element(:id, 'ap_email').displayed? }
+  end
+
   def run
     login
-
+    sleep 2
     @wait.until { @driver.find_element(:id, 'nav-orders').displayed? }
     element = @driver.find_element(:id, 'nav-orders')
     element.click
@@ -48,8 +58,9 @@ class AmazonManipulator
     titles = @driver.find_elements(:css, selector)
     puts "アイテム数: #{titles.size}"
     titles.map { |t| puts t.text }
-
-    sleep 3
+    sleep 2
+    logout
+    sleep 2
     @driver.quit
   end
 end
