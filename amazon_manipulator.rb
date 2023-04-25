@@ -24,29 +24,27 @@ class AmazonManipulator
   end
 
   def logout
-    element = wait_and_find_element(:id, 'nav-link-accountList')
-    @driver.action.move_to(element).perform
-    element = wait_and_find_element(:id, 'nav-item-signout')
-    element.click
-    wait_and_find_element(:id, 'ap_email')
+    open_nav_link_popup
+    wait_for_loged_out
   end
 
   def run
     login
     sleep 2
-    element = wait_and_find_element(:id, 'nav-orders')
-    element.click
-    wait_and_find_element(:id, 'navFooter')
-    puts @driver.title
-    years = @driver.find_element(:id, 'time-filter')
-    select = Selenium::WebDriver::Support::Select.new(years)
-    select.select_by(:value, 'year-2022')
-    @wait.until { @driver.find_element(:id, 'navFooter').displayed? }
-    selector = '#ordersContainer .order > div:nth-child(2) .a-fixed-left-grid-col.a-col-right > div:nth-child(1)'
-    titles = @driver.find_elements(:css, selector)
-    puts "アイテム数: #{titles.size}"
-    titles.map { |t| puts t.text }
-    sleep 2
+    # Order history output
+    # element = wait_and_find_element(:id, 'nav-orders')
+    # element.click
+    # wait_and_find_element(:id, 'navFooter')
+    # puts @driver.title
+    # years = @driver.find_element(:id, 'time-filter')
+    # select = Selenium::WebDriver::Support::Select.new(years)
+    # select.select_by(:value, 'year-2022')
+    # @wait.until { @driver.find_element(:id, 'navFooter').displayed? }
+    # selector = '#ordersContainer .order > div:nth-child(2) .a-fixed-left-grid-col.a-col-right > div:nth-child(1)'
+    # titles = @driver.find_elements(:css, selector)
+    # puts "アイテム数: #{titles.size}"
+    # titles.map { |t| puts t.text }
+    # sleep 2
     logout
     sleep 2
     @driver.quit
@@ -83,6 +81,17 @@ class AmazonManipulator
 
   def wait_for_loged_in
     wait_and_find_element(:id, 'nav-link-accountList')
+  end
+
+  def open_nav_link_popup
+    element = wait_and_find_element(:id, 'nav-link-accountList')
+    @driver.action.move_to(element).perform
+  end
+
+  def wait_for_loged_out
+    element = wait_and_find_element(:id, 'nav-item-signout')
+    element.click
+    wait_and_find_element(:id, 'ap_email')
   end
 end
 
