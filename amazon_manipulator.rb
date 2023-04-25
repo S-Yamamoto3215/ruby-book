@@ -28,23 +28,34 @@ class AmazonManipulator
     wait_for_loged_out
   end
 
+  def open_order_list
+    element = wait_and_find_element(:id, 'nav-orders')
+    element.click
+    wait_and_find_element(:id, 'navFooter')
+    puts @driver.title
+  end
+
+  def change_order_term
+    years = @driver.find_element(:id, 'time-filter')
+    select = Selenium::WebDriver::Support::Select.new(years)
+    select.select_by(:value, 'year-2022')
+    @wait.until { @driver.find_element(:id, 'navFooter').displayed? }
+  end
+
+  def list_ordered_items
+    selector = '#ordersContainer .order > div:nth-child(2) .a-fixed-left-grid-col.a-col-right > div:nth-child(1)'
+    titles = @driver.find_elements(:css, selector)
+    puts "アイテム数: #{titles.size}"
+    titles.map { |t| puts t.text }
+    sleep 2
+  end
+
   def run
     login
     sleep 2
-    # Order history output
-    # element = wait_and_find_element(:id, 'nav-orders')
-    # element.click
-    # wait_and_find_element(:id, 'navFooter')
-    # puts @driver.title
-    # years = @driver.find_element(:id, 'time-filter')
-    # select = Selenium::WebDriver::Support::Select.new(years)
-    # select.select_by(:value, 'year-2022')
-    # @wait.until { @driver.find_element(:id, 'navFooter').displayed? }
-    # selector = '#ordersContainer .order > div:nth-child(2) .a-fixed-left-grid-col.a-col-right > div:nth-child(1)'
-    # titles = @driver.find_elements(:css, selector)
-    # puts "アイテム数: #{titles.size}"
-    # titles.map { |t| puts t.text }
-    # sleep 2
+    open_order_list
+    change_order_term
+    list_ordered_items
     logout
     sleep 2
     @driver.quit
