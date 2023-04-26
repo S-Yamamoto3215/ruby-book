@@ -3,23 +3,49 @@
 require 'selenium-webdriver'
 require_relative './account_info'
 
-# Class for scraping Amazon purchase history.
-class AmazonManipulator
+# Application class (OHR)
+class OrderHistoryReporter
   include AccountInfo
 
-  BASE_URL = 'https://www.amazon.co.jp/'
-
   def initialize(account_file)
-    @driver = Selenium::WebDriver.for :chrome
-    @wait = Selenium::WebDriver::Wait.new(timeout: 20)
     @account = read(account_file)
+    @amazon = AmazonManipulator.new
   end
 
-  def login
+  def collect_order_history
+    title = @amazon.open_order_list
+    puts title
+    @amazon.change_order_term
+    @amazon.collect_ordered_items
+  end
+
+  def make_report(order_list)
+    puts "#{order_list.size} 件"
+    order_list.each { |title| puts title }
+  end
+
+  def run
+    @amazon.login(@account)
+    order_list = collect_order_history
+    @amazon.logout
+    make_report(order_list)
+  end
+end
+
+# Service class
+class AmazonManipulator
+  BASE_URL = 'https://www.amazon.co.jp/'
+
+  def initialize
+    @driver = Selenium::WebDriver.for :chrome
+    @wait = Selenium::WebDriver::Wait.new(timeout: 20)
+  end
+
+  def login(account)
     open_top_page
     open_login_page
-    enter_email
-    enter_password
+    enter_email(account[:email])
+    enter_password(account[:password])
     wait_for_loged_in
   end
 
@@ -31,8 +57,8 @@ class AmazonManipulator
   def open_order_list
     element = wait_and_find_element(:id, 'nav-orders')
     element.click
-    wait_and_find_element(:id, 'navFooter')
-    puts @driver.title
+    @wait.until { @driver.find_element(:id, 'navFooter').displayed? }
+    @driver.title
   end
 
   def change_order_term
@@ -42,12 +68,13 @@ class AmazonManipulator
     @wait.until { @driver.find_element(:id, 'navFooter').displayed? }
   end
 
-  def list_ordered_items
+  def collect_ordered_items
+    title_list = []
+
     selector = '#ordersContainer .order > div:nth-child(2) .a-fixed-left-grid-col.a-col-right > div:nth-child(1)'
     titles = @driver.find_elements(:css, selector)
-    puts "アイテム数: #{titles.size}"
-    titles.map { |t| puts t.text }
-    sleep 2
+    titles.each { |title| title_list << title.text }
+    title_list
   end
 
   def run
@@ -78,15 +105,15 @@ class AmazonManipulator
     element.click
   end
 
-  def enter_email
+  def enter_email(email)
     element = wait_and_find_element(:id, 'ap_email')
-    element.send_keys(@account[:email])
+    element.send_keys(email)
     @driver.find_element(:id, 'continue').click
   end
 
-  def enter_password
+  def enter_password(password)
     element = wait_and_find_element(:id, 'ap_password')
-    element.send_keys(@account[:password])
+    element.send_keys(password)
     @driver.find_element(:id, 'signInSubmit').click
   end
 
@@ -108,6 +135,6 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   abort 'Usage: ruby web_driver.rb <account.json>' if ARGV.empty?
-  app = AmazonManipulator.new(ARGV[0])
+  app = OrderHistoryReporter.new(ARGV[0])
   app.run
 end
