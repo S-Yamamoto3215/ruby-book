@@ -19,21 +19,28 @@ class OrderHistoryReporter
     @amazon.collect_ordered_items
   end
 
-  def make_report(order_list)
-    puts "#{order_list.size} 件"
-    order_list.each { |title| puts title }
+  def make_report(order_infos)
+    puts "#{order_infos.size} 件"
+    order_infos.each do |id, rec|
+      puts "ID: #{id}"
+      rec.each do |key, val|
+        puts format '%s: %s', key, val
+      end
+    end
   end
 
   def run
     @amazon.login(@account)
-    order_list = collect_order_history
+    order_infos = collect_order_history
     @amazon.logout
-    make_report(order_list)
+    make_report(order_infos)
   end
 end
 
 # Service class
 class AmazonManipulator
+  include Selenium::WebDriver::Error
+
   BASE_URL = 'https://www.amazon.co.jp/'
 
   def initialize
@@ -69,12 +76,52 @@ class AmazonManipulator
   end
 
   def collect_ordered_items
-    title_list = []
+    order_infos = {}
 
-    selector = '#ordersContainer .order > div:nth-child(2) .a-fixed-left-grid-col.a-col-right > div:nth-child(1)'
-    titles = @driver.find_elements(:css, selector)
-    titles.each { |title| title_list << title.text }
-    title_list
+    orders_container = @driver.find_element(:id, 'ordersContainer')
+
+    orders = orders_container.find_elements(:class, 'order')
+    orders.each do |order|
+      key = order.find_element(:tag_name, 'bdi').text
+      order_infos[key] = {}
+
+      info = order.find_element(:class, 'order-info')
+
+      right = info.find_element(:class, 'a-col-right')
+      label = right.find_element(:class, 'label').text
+      value = right.find_element(:class, 'value').text
+      order_infos[key][label] = value
+
+      left = info.find_element(:class, 'a-col-left')
+      cols = left.find_elements(:class, 'a-column')
+      cols.each do |col|
+        begin
+          label = col.find_element(:class, 'label')
+        rescue NoSuchElementError
+          # p 'no such element error'
+          next
+        end
+
+        label = label.text
+        value = col.find_element(:class, 'value').text
+        order_infos[key][label] = value
+      end
+
+      order_infos[key]['明細'] = []
+
+      selector = 'div:nth-child(2) .a-fixed-left-grid-col.a-col-right'
+      details = order.find_elements(:css, selector)
+
+      details.each do |detail_rows|
+        rows = detail_rows.find_elements(:class, 'a-row')
+        row_array = []
+        rows.each do |row|
+          row_array << row.text
+        end
+        order_infos[key]['明細'] << row_array
+      end
+    end
+    order_infos
   end
 
   def run
