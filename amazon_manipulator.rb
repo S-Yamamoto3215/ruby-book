@@ -118,7 +118,7 @@ class AmazonManipulator
         rows.each do |row|
           row_array << row.text
         end
-        order_infos[key]['明細'] << row_array
+        order_infos[key]['明細'] << row_array.uniq
       end
     end
     order_infos
