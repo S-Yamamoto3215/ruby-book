@@ -33,10 +33,10 @@ class AmazonManipulator
     @driver.title
   end
 
-  def change_order_term
+  def change_order_term(order_term)
     years = @driver.find_element(:id, 'time-filter')
     select = Selenium::WebDriver::Support::Select.new(years)
-    select.select_by(:value, 'year-2022')
+    select.select_by(:value, order_term)
     @wait.until { @driver.find_element(:id, 'navFooter').displayed? }
   end
 
