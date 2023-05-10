@@ -43,6 +43,22 @@ class AmazonManipulator
   def collect_ordered_items
     order_infos = {}
 
+    loop do
+      collect_ordered_items_by_page(order_infos)
+      begin
+        pagination = @driver.find_element(:class, 'a-pagination')
+        next_button = pagination.find_element(:class, 'a-last')
+        next_link = next_button.find_element(:css, 'a')
+      rescue NoSuchElementError
+        break
+      end
+      next_link.click
+      wait_and_find_element(:id, 'ordersContainer')
+    end
+    order_infos
+  end
+
+  def collect_ordered_items_by_page(order_infos)
     orders_container = @driver.find_element(:id, 'ordersContainer')
 
     orders = orders_container.find_elements(:class, 'order')
