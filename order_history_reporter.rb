@@ -7,6 +7,7 @@ require_relative './amazon_manipulator'
 # Application class (OHR)
 class OrderHistoryReporter
   include AccountInfo
+  UNNECESSARY_ITEMS = %w(販売 返品期間 再度購入).freeze
 
   def initialize(argv)
     @order_term = 'last30'
@@ -60,7 +61,18 @@ class OrderHistoryReporter
     puts "#{order_infos.size} 件"
     order_infos.each do |id, rec|
       puts "ID: #{id}"
-      rec.each do |key, val|
+      print_order_infos(rec)
+    end
+  end
+
+  def print_order_infos(order_infos)
+    order_infos.each do |key, val|
+      if key == '明細'
+        puts "#{key}:"
+        val.each do |item|
+          puts item.reject { |i| i.empty? || i.start_with?(*UNNECESSARY_ITEMS) }.join(',')
+        end
+      else
         puts format '%s: %s', key, val
       end
     end
