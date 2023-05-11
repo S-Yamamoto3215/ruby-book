@@ -9,6 +9,11 @@ class AmazonManipulator
   BASE_URL = 'https://www.amazon.co.jp/'
 
   def initialize
+    # Enabling headless mode
+    # options = Selenium::WebDriver::Chrome::Options.new
+    # options.headless!
+    # @driver = Selenium::WebDriver.for :chrome, options: options
+
     @driver = Selenium::WebDriver.for :chrome
     @wait = Selenium::WebDriver::Wait.new(timeout: 20)
   end
