@@ -39,7 +39,13 @@ class OrderHistoryReporter
       exit
     end
 
-    opts.parse!(argv)
+    begin
+      opts.parse!(argv)
+    rescue OptionParser::InvalidOption
+      puts opts.help
+      exit
+    end
+
     puts "取得期間: #{@order_term}"
   end
 
