@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Doc</title>
+</head>
+<body>
+  <p>アクセスした日は<%= today %>です</p>
+  <p>リクエストのパスは<%= req.path %>でした。</p>
+  <table border="1">
+  <% req.each do |key, value| %>
+    <tr>
+      <td><%= key %></td>
+      <td><%= value %></td>
+    </tr>
+  <% end %>
+  </table>
+</body>
+</html>
