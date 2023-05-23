@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./default.css">
+  <script>
+    function deleting(fn) {
+      const msg = '履歴 ' + fn + ' を削除してもよろしいですか？';
+      if(window.confirm(msg)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  </script>
+  <title>Amazon注文履歴</title>
+</head>
+<body>
+  <h1>Amazon注文履歴</h1>
+  <h2>取得済み注文履歴の削除</h2>
+  <p id="msg">削除したい削除したい注文履歴の[履歴を削除]を押してください</p>
+  <hr>
+  <table>
+    <tr>
+      <th>&nbsp;</th>
+      <th>取得期間</th>
+      <th>保存ファイル名</th>
+    </tr>
+    <tr>
+      <td>
+        <form action="delete" method="post" name="delete_form" onsubmit="return deleting('ohr-last30.output')">
+          <button class="exec_btn" type="submit">履歴を削除</button>
+        </form>
+      </td>
+      <td>過去30日間</td>
+      <td>ohr-last30.output</td>
+    </tr>
+    <tr>
+      <td>
+        <form action="delete" method="post" name="delete_form" onsubmit="return deleting('ohr-months-3.output')">
+          <button class="exec_btn" type="submit">履歴を削除</button>
+        </form>
+      </td>
+      <td>過去3か月</td>
+      <td>ohr-months-3.output</td>
+    </tr>
+    <tr>
+      <td>
+        <form action="delete" method="post" name="delete_form" onsubmit="return deleting('ohr-year-2020.output')">
+          <button class="exec_btn" type="submit">履歴を削除</button>
+        </form>
+      </td>
+      <td>2020年</td>
+      <td>ohr-year-2020.output</td>
+    </tr>
+  </table>
+  <hr>
+</body>
+</html>

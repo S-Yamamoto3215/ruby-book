@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./default.css">
+  <title>Amazon注文履歴</title>
+</head>
+<body>
+  <h1>Amazon注文履歴</h1>
+  <h2>注文履歴の取得</h2>
+  <p id="msg">取得期間とアカウントファイル名を指定して[履歴を取得]を押してください</p>
+  <hr>
+  <form action="collect" method="post" name="collect_form">
+    <table>
+      <tr>
+        <th>オプション項目</th>
+        <th>オプションデータ</th>
+      </tr>
+      <tr>
+        <td>取得期間</td>
+        <td>
+          <select name="term" id="selector">
+            <option value="last30">過去30日</option>
+            <option value="months-3">過去3か月</option>
+            <option value="year-2020">2020年</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>アカウントファイル名</td>
+        <td><input type="text" name="account" value="account.json"></td>
+      </tr>
+    </table>
+    <button class="exec_btn">履歴を取得</button>
+  </form>
+  <hr>
+</body>
+</html>

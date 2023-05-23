@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./default.css">
+  <title>注文履歴</title>
+</head>
+<body>
+  <h1>Amazon注文履歴</h1>
+  <h2>取得済み注文履歴ファイルの一覧</h2>
+  <p id="msg">表示したい注文履歴の[詳細を表示]を押してください</p>
+  <hr>
+  <table>
+    <tr>
+      <th>&nbsp;</th>
+      <th>取得期間</th>
+      <th>保存ファイル名</th>
+    </tr>
+    <tr>
+      <td>
+        <form method="post" action="report" name="list_form">
+          <button class="exec_btn" type="submit">詳細表示</button>
+        </form>
+      </td>
+      <td>過去30日間</td>
+      <td>ohr-last30.output</td>
+    </tr>
+    <tr>
+      <td>
+        <form method="post" action="report" name="list_form">
+          <button class="exec_btn" type="submit">詳細表示</button>
+        </form>
+      </td>
+      <td>過去3か月</td>
+      <td>ohr-months-3.output</td>
+    </tr>
+    <tr>
+      <td>
+        <form method="post" action="report" name="list_form">
+          <button class="exec_btn" type="submit">詳細表示</button>
+        </form>
+      </td>
+      <td>2020年</td>
+      <td>ohr-year-2020.output</td>
+    </tr>
+  </table>
+  <hr>
+</body>
+</html>
