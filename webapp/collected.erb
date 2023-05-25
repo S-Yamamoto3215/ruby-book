@@ -1,3 +1,6 @@
+<%# encoding: utf-8 %>
+<% require_relative './term_names.rb' %>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -9,23 +12,23 @@
 </head>
 <body>
   <h1>Amazon注文履歴</h1>
-  <h2 class="alert">注文履歴は取得できませんでした</h2>
+  <h2>注文履歴が取得できました</h2>
   <nav>
     <ul>
-      <li><a href="./collect.html">注文履歴の取得に戻る</a></li>
+      <li><a href="./list.html">取得済み注文履歴一覧の表示</a></li>
       <li><a href="./index.html">メニュー画面に戻る</a></li>
     </ul>
   </nav>
-  <p id="msg">取得時に指定した取得期間、アカウントファイル名を見直してください</p>
+  <p id="msg">下記の注文履歴を取得しました</p>
   <hr>
   <table>
     <tr>
       <th>取得期間</th>
-      <td>過去30日（last30）</td>
+      <td><%= $term_names[term] %>（<%= term %>）</td>
     </tr>
     <tr>
-      <th>アカウントファイル名</th>
-      <td>account.json</td>
+      <th>保存保存ファイル名</th>
+      <td><%= file %></td>
     </tr>
   </table>
   <hr>
