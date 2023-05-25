@@ -1,3 +1,6 @@
+<%# encoding: utf-8 %>
+<% require_relative './term_names' %>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -5,6 +8,25 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./default.css">
+  <style>
+    #loading {
+      display: none;
+      position: absolute;
+      top: 30%;
+      left: 30%;
+    }
+  </style>
+  <script>
+    function collecting() {
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('links').innerHTML = '';
+      document.getElementById('msg').innerHTML = '注文履歴を取得中です。しばらくお待ちください。';
+      document.collect_form.submit();
+      document.collect_form.term.disabled = true;
+      document.collect_form.account.disabled = true;
+      document.collect_form.exec_btn.disabled = true;
+    }
+  </script>
   <title>Amazon注文履歴</title>
 </head>
 <body>
@@ -28,9 +50,9 @@
         <td>取得期間</td>
         <td>
           <select name="term" id="selector">
-            <option value="last30">過去30日</option>
-            <option value="months-3">過去3か月</option>
-            <option value="year-2020">2020年</option>
+            <% $term_names.each_pair do |key, val| %>
+              <option value="<%= key %>"><%= val %></option>
+            <% end %>
           </select>
         </td>
       </tr>
@@ -39,8 +61,9 @@
         <td><input type="text" name="account" value="account.json"></td>
       </tr>
     </table>
-    <button class="exec_btn">履歴を取得</button>
+    <button class="exec_btn" name="exec_btn" onClick="collecting()">履歴を取得</button>
   </form>
+  <div id="loading"><img src="./loading.gif" /></div>
   <hr>
 </body>
 </html>
