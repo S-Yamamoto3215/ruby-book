@@ -1,3 +1,7 @@
+<%# encoding: utf-8 %>
+<% require_relative './term_names' %>
+<% files = Dir.glob("ohr-*.output") %>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -24,33 +28,22 @@
       <th>取得期間</th>
       <th>保存ファイル名</th>
     </tr>
-    <tr>
-      <td>
-        <form method="post" action="report" name="list_form">
-          <button class="exec_btn" type="submit">詳細表示</button>
-        </form>
-      </td>
-      <td>過去30日間</td>
-      <td>ohr-last30.output</td>
-    </tr>
-    <tr>
-      <td>
-        <form method="post" action="report" name="list_form">
-          <button class="exec_btn" type="submit">詳細表示</button>
-        </form>
-      </td>
-      <td>過去3か月</td>
-      <td>ohr-months-3.output</td>
-    </tr>
-    <tr>
-      <td>
-        <form method="post" action="report" name="list_form">
-          <button class="exec_btn" type="submit">詳細表示</button>
-        </form>
-      </td>
-      <td>2020年</td>
-      <td>ohr-year-2020.output</td>
-    </tr>
+    <% $term_names.each do |key, val| %>
+      <% files = "ohr-#{key}.output" %>
+      <% if FileTest.exist?(file) %>
+        <tr>
+          <td>
+            <form method="post" action="report" name="list_form_<%= key %>">
+              <input type="hidden" name="term" value="<%= key %>">
+              <input type="hidden" name="file" value="<%= val %>">
+              <button class="exec_btn" type="submit">詳細表示</button>
+            </form>
+          </td>
+          <td><%= val %></td>
+          <td><%= file %></td>
+        </tr>
+      <% end %>
+    <% end %>
   </table>
   <hr>
 </body>
