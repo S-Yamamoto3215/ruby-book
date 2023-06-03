@@ -15,12 +15,13 @@ class OrderHistoryWebApp
     @server = WEBrick::HTTPServer.new(@config)
     WEBrick::HTTPServlet::FileHandler.add_handler('erb', WEBrick::HTTPServlet::ERBHandler)
     @server.config[:MimeTypes]['erb'] = 'text/html'
-    trap(:INT) { server.shutdown }
+    trap(:INT) { @server.shutdown }
     add_procs
   end
 
   def add_procs
     add_collect_proc
+    add_list_proc
   end
 
   def run
@@ -32,10 +33,10 @@ class OrderHistoryWebApp
       p req.query
       term = req.query['term']
       account = req.query['account']
-      # script = '../order_history_reporter.rb'
-      # file = "ohr-#{term}.output"
-      script = 'long_time_test.rb'
-      file = 'ohr-dummy.output'
+      script = '../order_history_reporter.rb'
+      file = "ohr-#{term}.output"
+      # script = 'long_time_test.rb'
+      # file = 'ohr-dummy.output'
       cmd = "ruby #{script} -t #{term} -a #{account} > #{file}"
       stdout, stderr, status = Open3.capture3(cmd)
       p stdout, stderr, status
@@ -46,6 +47,13 @@ class OrderHistoryWebApp
           'nocollected.erb'
         end
       template = ERB.new(File.read(erb))
+      res.body << template.result(binding)
+    end
+  end
+
+  def add_list_proc
+    @server.mount_proc('/list') do |req, res|
+      template = ERB.new(File.read('list.erb'))
       res.body << template.result(binding)
     end
   end

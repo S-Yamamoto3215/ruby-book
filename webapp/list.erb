@@ -29,7 +29,7 @@
       <th>保存ファイル名</th>
     </tr>
     <% $term_names.each do |key, val| %>
-      <% files = "ohr-#{key}.output" %>
+      <% file = "ohr-#{key}.output" %>
       <% if FileTest.exist?(file) %>
         <tr>
           <td>
