@@ -67,14 +67,7 @@ class OrderHistoryReporter
 
   def print_order_infos(order_infos)
     order_infos.each do |key, val|
-      if key == '明細'
-        puts "#{key}:"
-        val.each do |item|
-          puts item.reject { |i| i.empty? || i.start_with?(*UNNECESSARY_ITEMS) }.join(',')
-        end
-      else
-        puts format '%s: %s', key, val
-      end
+      puts format '%s: %s', key, val
     end
   end
 
