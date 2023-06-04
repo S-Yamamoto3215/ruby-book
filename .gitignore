@@ -2,3 +2,4 @@ vendor
 account.json
 Gemfile.lock
 .ruby-version
+*.output
